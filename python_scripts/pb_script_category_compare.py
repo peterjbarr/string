@@ -91,13 +91,29 @@ plot2.set_ylabel("BNF Chapter")
 #plot actual cost difference
 cost_diff = result[['DiffFrom2020_Cost']].copy()
 cost_diff2 = result[['COST_APRIL20','COST_APRIL21']].copy()
+
 print(cost_diff2)
 
 
-plot3 = cost_diff2.plot(kind = 'bar')
-plot4 = cost_diff.plot(kind = 'bar')
+plot3 = cost_diff2.plot(kind = 'bar', title='Actual cost comparison in BNF Chapters April 20 and April 21')
+plot3.set_xlabel("BNF Chapter")
+plot3.set_ylabel("£m")
+plot3.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
 
+plot4 = cost_diff2.plot(kind = 'bar', title='Actual cost comparison in BNF Chapters April 20 and April 21')
+plot4.set_xlabel("BNF Chapter")
+plot4.set_ylabel("£m")
+plot4.set_ylim(0,1750000)
+plot4.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+plot5 = cost_diff.plot(kind = 'bar', title='Actual cost increase/descrease in BNF Chapter Categories April 20 and April 21')
+plot5.set_xlabel("BNF Chapter")
+plot5.set_ylabel("£")
+plot6 = cost_diff.plot(kind = 'bar', title='Actual cost increase/descrease in BNF Chapter Categories April 20 and April 21')
+plot6.set_xlabel("BNF Chapter")
+plot6.set_ylabel("£")
+plot6.set_ylim(-70000,110000)
 
 
 
