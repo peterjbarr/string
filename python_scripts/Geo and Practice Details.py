@@ -19,15 +19,15 @@ pio.renderers.default = 'browser'
 
 ##Import Data
 
-M2020 = pd.read_csv (r'C:\Users\nickw\OneDrive\Documents\Python Scripts\Test\Test\EPD_202004.csv')
+M2020 = pd.read_csv (r'https://raw.githubusercontent.com/peterjbarr/string/main/data/EPD_202004.csv')
 
-M2021 = pd.read_csv (r'C:\Users\nickw\OneDrive\Documents\Python Scripts\Test\Test\EPD_202104.csv')
+M2021 = pd.read_csv (r'https://raw.githubusercontent.com/peterjbarr/string/main/data/EPD_202104.csv')
 
 ##Import Population Data by Practice
 
-pop_gp = pd.read_csv (r'C:\Users\nickw\OneDrive\Documents\Python Scripts\Test\Test\gp_pop.csv')
+pop_gp_2020 = pd.read_csv (r'https://raw.githubusercontent.com/peterjbarr/string/main/data/gp_pop.csv')
 
-pop__gp_2021 = pd.read_csv (r'C:\Users\nickw\OneDrive\Documents\Python Scripts\Test\Test\GP_Pop_2021.csv')
+pop__gp_2021 = pd.read_csv (r'https://raw.githubusercontent.com/peterjbarr/string/main/data/GP_Pop_2021.csv')
 
 ##Import Geojson
 
@@ -46,7 +46,7 @@ M2020 = M2020.groupby(['PRACTICE_CODE', 'POSTCODE', 'PRACTICE_NAME', 'Postcode_R
 
 ## Link with Popualtion Data for GP Practices
 
-M2020 = pd.merge(M2020,pop_gp ,on='PRACTICE_CODE',how='left')
+M2020 = pd.merge(M2020,pop_gp_2020 ,on='PRACTICE_CODE',how='left')
 
 M2020 ['Cost_Capita']= M2020.ACTUAL_COST/M2020.Population
 
