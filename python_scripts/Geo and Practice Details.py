@@ -108,13 +108,7 @@ Site_Cost = pd.merge(M2020,M2021, how='outer', on= 'PRACTICE_CODE')
 
 ##Remove unneccessary columns
 
-Site_Cost.drop(Site_Cost.columns[3:10], axis = 1, inplace = True)
-
-Site_Cost.drop(Site_Cost.columns[4:6], axis = 1, inplace = True)
-
-Site_Cost.drop(Site_Cost.columns[5:14], axis = 1, inplace = True)
-
-Site_Cost.drop(Site_Cost.columns[6:9], axis = 1, inplace = True)
+Site_Cost = Site_Cost.iloc[:, [0, 2, 3, 10, 13, 23, 27]]
 
 ##Percentage Change
 
@@ -134,13 +128,9 @@ M2021_Postcode.rename(columns = {'Cost_Capita2' : 'Cost_2021'}, inplace= True)
 
 M2020_Postcode.rename(columns = {'Cost_Capita2' : 'Cost_2020'}, inplace= True)
 
-M2020_Postcode.drop(M2020_Postcode.columns[1:7], axis = 1, inplace = True)
+M2020_Postcode = M2020_Postcode.iloc[:, [0, 7, 11]]
 
-M2020_Postcode.drop(M2020_Postcode.columns[2:5], axis = 1, inplace = True)
-
-M2021_Postcode.drop(M2021_Postcode.columns[1:7], axis = 1, inplace = True)
-
-M2021_Postcode.drop(M2021_Postcode.columns[2:5], axis = 1, inplace = True)
+M2021_Postcode = M2021_Postcode.iloc[:, [0, 7, 11]]
 
 Postcode_Cost = pd.merge(M2020_Postcode,M2021_Postcode, how='outer', on= 'Postcode_Region')
 
