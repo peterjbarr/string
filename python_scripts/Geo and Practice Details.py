@@ -27,7 +27,7 @@ M2021 = pd.read_csv (r'https://raw.githubusercontent.com/peterjbarr/string/main/
 
 pop_gp_2020 = pd.read_csv (r'https://raw.githubusercontent.com/peterjbarr/string/main/data/gp_pop.csv')
 
-pop__gp_2021 = pd.read_csv (r'https://raw.githubusercontent.com/peterjbarr/string/main/data/GP_Pop_2021.csv')
+pop_gp_2021 = pd.read_csv (r'https://raw.githubusercontent.com/peterjbarr/string/main/data/GP_Pop_2021.csv')
 
 ##Import Geojson
 
@@ -35,6 +35,8 @@ r = requests.get('https://raw.githubusercontent.com/missinglink/uk-postcode-poly
 
 Manchester_Map = r.json()
 
+
+##At this point you could add a filter to compare BNF_CHAPTER_PLUS_CODE on a regional and GP Practice Level as in Jupyter Notebook
 
 ##Split the postcode
 
@@ -72,7 +74,7 @@ M2021[['Postcode_Region', 'Postcode_Detail']] = M2021.POSTCODE.str.split(" ", ex
 
 M2021 = M2021.groupby(['PRACTICE_CODE', 'POSTCODE', 'PRACTICE_NAME', 'Postcode_Region']).sum().reset_index()
 
-M2021 = pd.merge(M2021,pop__gp_2021 ,on='PRACTICE_CODE',how='left')
+M2021 = pd.merge(M2021,pop_gp_2021 ,on='PRACTICE_CODE',how='left')
 
 M2021['Cost_Capita']= M2021.ACTUAL_COST/M2021.Population
 
@@ -87,9 +89,6 @@ M2021 = M2021[M2021['Population'].notna()]
 ## Rename Actual Cost as Well
 
 M2021.rename(columns = {'ACTUAL_COST' : 'Actual_Cost_2021'}, inplace= True)
-
-
-##Move rename forward
 
 M2021_Postcode = M2021.groupby(['Postcode_Region']).sum().reset_index()
 
@@ -155,8 +154,9 @@ Top_10 = Site_Cost_Top_10[['Cost_2021', 'Cost_2020']].plot.barh()
 plt.ylabel('PRACTICE NAME')
 plt.xlabel('Cost Per Capita (£), April')
 plt.title('Top 10 Highest Spending (Per Capita) GP Surgeries')
+plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
 
-# Bottom 10
+# Bottom 10 (dropped xlim to allow for using with types specific searches)
 
 Site_Cost_Bottom_10 = Site_Cost.nsmallest(10, "Cost_2021")
 
@@ -164,7 +164,6 @@ Bottom_10 = Site_Cost_Bottom_10[['Cost_2021', 'Cost_2020']].plot.barh()
 plt.ylabel('PRACTICE NAME')
 plt.xlabel('Cost Per Capita (£), April')
 plt.title('Bottom 10 Spending (Per Capita) GP Surgeries')
-plt.xlim(0,20 )
 plt.show()
 
 ##Change difference
