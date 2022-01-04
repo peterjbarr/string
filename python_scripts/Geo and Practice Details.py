@@ -224,7 +224,7 @@ Comparison_Practice_21_22 = Site_Cost[['Actual_Cost_2020', 'Actual_Cost_2021']].
 
 Site_Cost =Site_Cost.sort_values(by = 'Actual_Cost_2021', ascending= False)
 
-Bar_Site = Site_Cost.plot(kind = 'barh', y= 'Actual_Cost_2021', x='PRACTICE_NAME_x').tick_params(axis= 'y' , labelsize = 2)
+Bar_Site = Site_Cost.plot(kind = 'barh', y= 'Actual_Cost_2021', x= 'PRACTICE_NAME_x').tick_params(axis= 'y' , labelsize = 2)
 
 ## Top 10
 
@@ -264,7 +264,7 @@ Postcode_Cost.set_index("Postcode_Region", drop=False, inplace = True)
 Postcode_Bar = Postcode_Cost[['Actual_Cost_2021', 'Actual_Cost_2020']].plot.bar()
 plt.xlabel('Postcode Region')
 plt.ylabel('Total Cost, April')
-plt.title('Postcode Per Capita Cost')
+plt.title('Postcode Total Cost')
 plt.show()
 
 ##Regional Map 2021 & Change
