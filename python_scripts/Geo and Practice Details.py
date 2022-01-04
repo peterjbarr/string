@@ -58,11 +58,13 @@ print(TestM2020['PRACTICE_NAME'])
 
 M2020 = M2020[M2020['Population'].notna()]
 
+M2020.rename(columns = {'ACTUAL_COST' : 'Actual_Cost_2020'}, inplace= True)
+
 ##New Dataset by Postcode
 
 M2020_Postcode = M2020.groupby(['Postcode_Region']).sum().reset_index()
 
-M2020_Postcode['Cost_Capita2']= M2020_Postcode.ACTUAL_COST/M2020_Postcode.Population
+M2020_Postcode['Cost_Capita2']= M2020_Postcode.Actual_Cost_2020/M2020_Postcode.Population
 
 ##Repeat for M2021
 
@@ -82,9 +84,17 @@ print(TestM2021['PRACTICE_NAME'])
 
 M2021 = M2021[M2021['Population'].notna()]
 
+## Rename Actual Cost as Well
+
+M2021.rename(columns = {'ACTUAL_COST' : 'Actual_Cost_2021'}, inplace= True)
+
+
+##Move rename forward
+
 M2021_Postcode = M2021.groupby(['Postcode_Region']).sum().reset_index()
 
-M2021_Postcode['Cost_Capita2']= M2021_Postcode.ACTUAL_COST/M2021_Postcode.Population
+M2021_Postcode['Cost_Capita2']= M2021_Postcode.Actual_Cost_2021/M2021_Postcode.Population
+
 
 ##Rename Columns
 
@@ -98,13 +108,19 @@ Site_Cost = pd.merge(M2020,M2021, how='outer', on= 'PRACTICE_CODE')
 
 ##Remove unneccessary columns
 
-Site_Cost.drop(Site_Cost.columns[3:13], axis = 1, inplace = True)
+Site_Cost.drop(Site_Cost.columns[3:10], axis = 1, inplace = True)
 
-Site_Cost.drop(Site_Cost.columns[4:16], axis = 1, inplace = True)
+Site_Cost.drop(Site_Cost.columns[4:6], axis = 1, inplace = True)
+
+Site_Cost.drop(Site_Cost.columns[5:14], axis = 1, inplace = True)
+
+Site_Cost.drop(Site_Cost.columns[6:9], axis = 1, inplace = True)
 
 ##Percentage Change
 
 Site_Cost['Percentage_Change']= (Site_Cost.Cost_2021/Site_Cost.Cost_2020-1)*100
+
+Site_Cost['Percentage_Change_Total']= (Site_Cost.Actual_Cost_2021/Site_Cost.Actual_Cost_2020-1)*100
 
 ## Sort by 2021
 
@@ -118,13 +134,19 @@ M2021_Postcode.rename(columns = {'Cost_Capita2' : 'Cost_2021'}, inplace= True)
 
 M2020_Postcode.rename(columns = {'Cost_Capita2' : 'Cost_2020'}, inplace= True)
 
-M2020_Postcode.drop(M2020_Postcode.columns[1:11], axis = 1, inplace = True)
+M2020_Postcode.drop(M2020_Postcode.columns[1:7], axis = 1, inplace = True)
 
-M2021_Postcode.drop(M2021_Postcode.columns[1:11], axis = 1, inplace = True)
+M2020_Postcode.drop(M2020_Postcode.columns[2:5], axis = 1, inplace = True)
+
+M2021_Postcode.drop(M2021_Postcode.columns[1:7], axis = 1, inplace = True)
+
+M2021_Postcode.drop(M2021_Postcode.columns[2:5], axis = 1, inplace = True)
 
 Postcode_Cost = pd.merge(M2020_Postcode,M2021_Postcode, how='outer', on= 'Postcode_Region')
 
 Postcode_Cost['Percentage_Change']= (Postcode_Cost.Cost_2021/Postcode_Cost.Cost_2020-1)*100
+
+Postcode_Cost['Percentage_Change_Total']= (Postcode_Cost.Actual_Cost_2021/Postcode_Cost.Actual_Cost_2020-1)*100
 
 ##boxplot explore
  
@@ -197,6 +219,75 @@ fig2 = px.choropleth(Postcode_Cost, locations = 'id', geojson= Manchester_Map, c
 fig2.update_geos(fitbounds = "locations", visible= False)
 fig2.show()
 
-fig3 = px.choropleth(Postcode_Cost, locations = 'id', geojson= Manchester_Map, color= 'Percentage_Change', hover_name='Postcode_Region', title= "Cost Per Capita April 2020" )
+fig3 = px.choropleth(Postcode_Cost, locations = 'id', geojson= Manchester_Map, color= 'Percentage_Change', hover_name='Postcode_Region', title= "Percentage Change (Per Capita)" )
+fig3.update_geos(fitbounds = "locations", visible= False)
+fig3.show()
+
+
+## Late Edition adding for total change prior text to combine totals as well REPEATED ANALYSIS WITH TOTALS
+
+##boxplot explore
+ 
+Comparison_Practice_21_22 = Site_Cost[['Actual_Cost_2020', 'Actual_Cost_2021']].boxplot()
+
+
+##bar explore
+
+Site_Cost =Site_Cost.sort_values(by = 'Actual_Cost_2021', ascending= False)
+
+Bar_Site = Site_Cost.plot(kind = 'barh', y= 'Actual_Cost_2021', x='PRACTICE_NAME_x').tick_params(axis= 'y' , labelsize = 2)
+
+## Top 10
+
+Site_Cost_Top_10 = Site_Cost.nlargest(10, "Actual_Cost_2021")
+
+Top_10 = Site_Cost_Top_10[['Actual_Cost_2021', 'Actual_Cost_2020']].plot.barh()
+plt.ylabel('PRACTICE NAME')
+plt.xlabel('Total Cost (£), April')
+plt.title('Top 10 Highest Spending GP Surgeries')
+
+# Bottom 10
+
+Site_Cost_Bottom_10 = Site_Cost.nsmallest(10, "Actual_Cost_2021")
+
+Bottom_10 = Site_Cost_Bottom_10[['Actual_Cost_2021', 'Actual_Cost_2020']].plot.barh()
+plt.ylabel('PRACTICE NAME')
+plt.xlabel('Total Cost, April')
+plt.title('Bottom 10 Spending GP Surgeries')
+plt.show()
+
+##Change difference
+
+Site_Cost =Site_Cost.sort_values(by = 'Percentage_Change_Total', ascending= False)
+
+Site_Change = Site_Cost.boxplot( column = "Percentage_Change_Total", return_type = 'axes')
+
+print(Site_Cost.describe())
+
+print(Site_Cost.head())
+
+##Regional Look Bar Chart
+
+Postcode_Cost =Postcode_Cost.sort_values(by = 'Actual_Cost_2021', ascending= False)
+
+Postcode_Cost.set_index("Postcode_Region", drop=False, inplace = True)
+
+Postcode_Bar = Postcode_Cost[['Actual_Cost_2021', 'Actual_Cost_2020']].plot.bar()
+plt.xlabel('Postcode Region')
+plt.ylabel('Total Cost, April')
+plt.title('Postcode Per Capita Cost')
+plt.show()
+
+##Regional Map 2021 & Change
+    
+fig1 = px.choropleth(Postcode_Cost, locations = 'id', geojson= Manchester_Map, color= 'Actual_Cost_2021', hover_name='Postcode_Region', title= "Total Cost April 2021" )
+fig1.update_geos(fitbounds = "locations", visible= False)
+fig1.show()
+
+fig2 = px.choropleth(Postcode_Cost, locations = 'id', geojson= Manchester_Map, color= 'Actual_Cost_2020', hover_name='Postcode_Region', title= "Total Cost April 2020" )
+fig2.update_geos(fitbounds = "locations", visible= False)
+fig2.show()
+
+fig3 = px.choropleth(Postcode_Cost, locations = 'id', geojson= Manchester_Map, color= 'Percentage_Change_Total', hover_name='Postcode_Region', title= "Total percentage Change" )
 fig3.update_geos(fitbounds = "locations", visible= False)
 fig3.show()
