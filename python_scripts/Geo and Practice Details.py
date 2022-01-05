@@ -58,7 +58,15 @@ TestM2020= M2020[M2020.isna().any(axis=1)]
 
 print(TestM2020['PRACTICE_NAME'])
 
+M2020_All = M2020['ACTUAL_COST'].sum() 
+
 M2020 = M2020[M2020['Population'].notna()]
+
+M2020_GP = M2020['ACTUAL_COST'].sum()
+
+GP_Percentage_Spend_2020 = 100*M2020_GP/M2020_All
+
+print("GP Perscription Spending Accounted for ", "{:.2f}".format(GP_Percentage_Spend_2020), "% of Total Expenditure in April 2020")
 
 M2020.rename(columns = {'ACTUAL_COST' : 'Actual_Cost_2020'}, inplace= True)
 
@@ -84,16 +92,27 @@ TestM2021= M2021[M2021.isna().any(axis=1)]
 
 print(TestM2021['PRACTICE_NAME'])
 
+M2021_All = M2021['ACTUAL_COST'].sum() 
+
+M2021_All = M2021['ACTUAL_COST'].sum() 
+
 M2021 = M2021[M2021['Population'].notna()]
 
+M2021_GP = M2021['ACTUAL_COST'].sum()
+
+GP_Percentage_Spend_2021 = 100*M2021_GP/M2021_All
+
+print("GP Perscription Spending Accounted for ", "{:.2f}".format(GP_Percentage_Spend_2021), "% of Total Expenditure in April 2021")
+
 ## Rename Actual Cost as Well
+
+M2021_GP = M2021['ACTUAL_COST'].sum()
 
 M2021.rename(columns = {'ACTUAL_COST' : 'Actual_Cost_2021'}, inplace= True)
 
 M2021_Postcode = M2021.groupby(['Postcode_Region']).sum().reset_index()
 
 M2021_Postcode['Cost_Capita2']= M2021_Postcode.Actual_Cost_2021/M2021_Postcode.Population
-
 
 ##Rename Columns
 
